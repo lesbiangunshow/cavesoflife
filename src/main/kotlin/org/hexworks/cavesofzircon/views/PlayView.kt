@@ -1,37 +1,45 @@
 package org.hexworks.cavesofzircon.views
 
+import org.hexworks.cavesofzircon.Game
+import org.hexworks.cavesofzircon.GameBlock
+import org.hexworks.cavesofzircon.GameConfig
 import org.hexworks.zircon.api.ColorThemes
 import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.GameComponents
 import org.hexworks.zircon.api.component.ComponentAlignment
-import org.hexworks.zircon.api.graphics.BoxType
+import org.hexworks.zircon.api.data.Tile
+import org.hexworks.zircon.api.game.ProjectionMode
 import org.hexworks.zircon.api.mvc.base.BaseView
 
-class PlayView : BaseView() {
+class PlayView(private val game: Game = Game.create()) : BaseView() {
 
     override val theme = ColorThemes.arc()
 
     override fun onDock() {
 
-        val loseButton = Components.button()
-                .withAlignmentWithin(screen, ComponentAlignment.LEFT_CENTER)
-                .withText("Lose!")
-                .wrapSides(false)
-                .withBoxType(BoxType.SINGLE)
-                .wrapWithShadow()
-                .wrapWithBox()
-                .build()
+        val gameComponent = GameComponents.newGameComponentBuilder<Tile, GameBlock>()
+            .withGameArea(game.world)
+            .withVisibleSize(game.world.visibleSize())
+            .withProjectionMode(ProjectionMode.TOP_DOWN)
+            .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
+            .build()
 
-        val winButton = Components.button()
-                .withAlignmentWithin(screen, ComponentAlignment.RIGHT_CENTER)
-                .withText("Win!")
-                .wrapSides(false)
-                .withBoxType(BoxType.SINGLE)
-                .wrapWithShadow()
-                .wrapWithBox()
-                .build()
+        screen.addComponent(gameComponent)
 
-        screen.addComponent(loseButton)
-        screen.addComponent(winButton)
+        val sidebar = Components.panel()
+            .withSize(GameConfig.SIDEBAR_WIDTH, GameConfig.WINDOW_HEIGHT)
+            .wrapWithBox()
+            .build()
 
+        screen.addComponent(sidebar)
+
+        val logArea = Components.logArea()
+            .withTitle("Log")
+            .wrapWithBox()
+            .withSize(GameConfig.WINDOW_WIDTH - GameConfig.SIDEBAR_WIDTH, GameConfig.LOG_AREA_HEIGHT)
+            .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_RIGHT)
+            .build()
+
+        screen.addComponent(logArea)
     }
 }

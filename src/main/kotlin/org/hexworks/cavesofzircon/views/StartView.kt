@@ -33,6 +33,7 @@ class StartView : BaseView() {
                         close()
                     }
                 }
+
         screen.addComponent(header)
         screen.addComponent(startButton)
     }
