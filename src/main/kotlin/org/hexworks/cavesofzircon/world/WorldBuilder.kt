@@ -1,7 +1,6 @@
-package org.hexworks.cavesofzircon.builders
+package org.hexworks.cavesofzircon.world
 
-import org.hexworks.cavesofzircon.GameBlock
-import org.hexworks.cavesofzircon.World
+import org.hexworks.cavesofzircon.blocks.GameBlock
 import org.hexworks.cavesofzircon.extensions.sameLevelNeighborsShuffled
 import org.hexworks.cavesofzircon.factories.GameBlockFactory
 import org.hexworks.zircon.api.Positions
@@ -16,7 +15,8 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     fun makeCaves() = randomizeTiles().smooth(8)
 
-    fun build(visibleSize: Size3D) = World(blocks, visibleSize, worldSize)
+    fun build(visibleSize: Size3D) =
+        World(blocks, visibleSize, worldSize)
 
     private fun randomizeTiles(): WorldBuilder {
         forAllPositions {

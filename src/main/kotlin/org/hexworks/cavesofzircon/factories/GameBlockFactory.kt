@@ -1,6 +1,6 @@
 package org.hexworks.cavesofzircon.factories
 
-import org.hexworks.cavesofzircon.GameBlock
+import org.hexworks.cavesofzircon.blocks.GameBlock
 import org.hexworks.cavesofzircon.GameTileRepository
 
 object GameBlockFactory {
