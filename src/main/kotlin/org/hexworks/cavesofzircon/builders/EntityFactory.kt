@@ -7,6 +7,9 @@ import org.hexworks.cavesofzircon.GameTileRepository
 import org.hexworks.cavesofzircon.attributes.EntityPosition
 import org.hexworks.cavesofzircon.attributes.EntityTile
 import org.hexworks.cavesofzircon.attributes.types.Player
+import org.hexworks.cavesofzircon.systems.CameraMover
+import org.hexworks.cavesofzircon.systems.InputReceiver
+import org.hexworks.cavesofzircon.systems.Movable
 import org.hexworks.cavesofzircon.world.GameContext
 
 fun <T: EntityType> newGameEntityOfType(type: T, init: EntityBuilder<T, GameContext>.() -> Unit) =
@@ -20,7 +23,11 @@ object EntityFactory {
             EntityTile(GameTileRepository.PLAYER)
         )
 
-        behaviors()
-        facets()
+        behaviors(
+            InputReceiver
+        )
+        facets(
+            Movable, CameraMover
+        )
     }
 }

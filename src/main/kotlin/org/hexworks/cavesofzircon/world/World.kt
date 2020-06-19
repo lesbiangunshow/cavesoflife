@@ -7,7 +7,7 @@ import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cavesofzircon.blocks.GameBlock
 import org.hexworks.cavesofzircon.extensions.GameEntity
 import org.hexworks.cavesofzircon.extensions.position
-import org.hexworks.cavesofzircon.factories.GameBlockFactory
+import org.hexworks.cavesofzircon.builders.GameBlockFactory
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.cobalt.datatypes.extensions.fold
 import org.hexworks.cobalt.datatypes.extensions.map
@@ -17,6 +17,8 @@ import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.game.GameArea
+import org.hexworks.zircon.api.screen.Screen
+import org.hexworks.zircon.api.uievent.UIEvent
 
 class World(
     startingBlocks: Map<Position3D, GameBlock>,
@@ -43,6 +45,17 @@ class World(
                 it.position = position
             }
         }
+    }
+
+    fun update(screen: Screen, uiEvent: UIEvent, game: Game) {
+        engine.update(
+            GameContext(
+                world = this,
+                screen = screen,
+                uiEvent = uiEvent,
+                player = game.player
+            )
+        )
     }
 
     fun addEntity(
@@ -88,5 +101,20 @@ class World(
         }
 
         return position
+    }
+
+    fun moveEntity(entity: GameEntity<EntityType>, position: Position3D): Boolean {
+        var success = false
+        val oldBlock = fetchBlockAt(entity.position)
+        val newBlock = fetchBlockAt(position)
+
+        if (oldBlock.isPresent && newBlock.isPresent) {
+            success = true
+            oldBlock.get().removeEntity(entity)
+            entity.position = position
+            newBlock.get().addEntity(entity)
+        }
+
+        return success
     }
 }

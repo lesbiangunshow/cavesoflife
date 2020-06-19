@@ -1,4 +1,4 @@
-package org.hexworks.cavesofzircon.factories
+package org.hexworks.cavesofzircon.builders
 
 import org.hexworks.cavesofzircon.blocks.GameBlock
 import org.hexworks.cavesofzircon.GameTileRepository
