@@ -1,5 +1,6 @@
 package org.hexworks.cavesofzircon.world
 
+import com.sun.corba.se.spi.orbutil.fsm.StateEngine
 import org.hexworks.amethyst.api.Engine
 import org.hexworks.amethyst.api.Engines
 import org.hexworks.amethyst.api.entity.Entity
@@ -67,6 +68,15 @@ class World(
         fetchBlockAt(position).map {
             it.addEntity(entity)
         }
+    }
+
+    fun removeEntity(entity: Entity<EntityType, GameContext>) {
+        fetchBlockAt(entity.position).map {
+            it.removeEntity(entity)
+        }
+
+        engine.removeEntity(entity)
+        entity.position = Position3D.unknown()
     }
 
     fun addAtEmptyPosition(

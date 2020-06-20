@@ -3,7 +3,9 @@ package org.hexworks.cavesofzircon.blocks
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cavesofzircon.GameTileRepository
 import org.hexworks.cavesofzircon.extensions.GameEntity
+import org.hexworks.cavesofzircon.extensions.occupesBlock
 import org.hexworks.cavesofzircon.extensions.tile
+import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.BlockSide
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BlockBase
@@ -13,6 +15,13 @@ class GameBlock(
     private val currentEntities: MutableList<GameEntity<EntityType>> = mutableListOf()
 ) : BlockBase<Tile>() {
 
+    companion object {
+
+        fun createWith(entity: GameEntity<EntityType>) = GameBlock(
+            currentEntities = mutableListOf(entity)
+        )
+    }
+
     val isFloor: Boolean
         get() = defaultTile == GameTileRepository.FLOOR
 
@@ -21,6 +30,12 @@ class GameBlock(
 
     val isEmptyFloor: Boolean
         get() = currentEntities.isEmpty()
+
+    val occupier: Maybe<GameEntity<EntityType>>
+        get() = Maybe.ofNullable(currentEntities.firstOrNull { it.occupesBlock })
+
+    val isOccupied: Boolean
+        get() = occupier.isPresent
 
     val entities: Iterable<GameEntity<EntityType>>
         get() = currentEntities.toList()
