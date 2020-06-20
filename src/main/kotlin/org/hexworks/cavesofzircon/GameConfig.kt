@@ -17,6 +17,9 @@ object GameConfig {
     const val WINDOW_WIDTH = 80
     const val WINDOW_HEIGHT = 50
 
+    const val FUNGI_PER_LEVEL = 15
+    const val MAXIMUM_FUNGUS_SPREAD = 20
+
     val WORLD_SIZE = Sizes.create3DSize(WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2, DUNGEON_LEVELS)
 
     fun buildAppConfig() = AppConfigs.newConfig()

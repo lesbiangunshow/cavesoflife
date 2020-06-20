@@ -1,4 +1,4 @@
-package org.hexworks.cavesofzircon
+package org.hexworks.cavesofzircon.builders
 
 import org.hexworks.cavesofzircon.GameColors
 import org.hexworks.zircon.api.Tiles
@@ -25,6 +25,12 @@ object GameTileRepository {
         .withCharacter('@')
         .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
         .withForegroundColor(GameColors.ACCENT_COLOR)
+        .buildCharacterTile()
+
+    val FUNGUS: CharacterTile = Tiles.newBuilder()
+        .withCharacter('f')
+        .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
+        .withForegroundColor(GameColors.FUNGUS_COLOR)
         .buildCharacterTile()
 
 }

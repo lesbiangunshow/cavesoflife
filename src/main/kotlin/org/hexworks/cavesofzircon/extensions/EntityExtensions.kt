@@ -45,3 +45,4 @@ fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Res
 fun <T: Attribute> AnyGameEntity.tryToFindAttribute(klass: KClass<T>): T = findAttribute(klass).orElseThrow {
     NoSuchElementException("Entity '$this' has no property with type '${klass.simpleName}'.")
 }
+

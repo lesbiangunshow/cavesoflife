@@ -9,3 +9,7 @@ object Player : BaseEntityType(
 object Wall : BaseEntityType(
     name = "wall"
 )
+
+object Fungus : BaseEntityType(
+    name = "fungus"
+)

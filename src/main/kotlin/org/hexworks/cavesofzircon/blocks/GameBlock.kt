@@ -1,7 +1,7 @@
 package org.hexworks.cavesofzircon.blocks
 
 import org.hexworks.amethyst.api.entity.EntityType
-import org.hexworks.cavesofzircon.GameTileRepository
+import org.hexworks.cavesofzircon.builders.GameTileRepository
 import org.hexworks.cavesofzircon.extensions.GameEntity
 import org.hexworks.cavesofzircon.extensions.occupesBlock
 import org.hexworks.cavesofzircon.extensions.tile
