@@ -5,20 +5,25 @@ import org.hexworks.amethyst.api.Engine
 import org.hexworks.amethyst.api.Engines
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
+import org.hexworks.cavesofzircon.attributes.Vision
 import org.hexworks.cavesofzircon.blocks.GameBlock
 import org.hexworks.cavesofzircon.extensions.GameEntity
 import org.hexworks.cavesofzircon.extensions.position
 import org.hexworks.cavesofzircon.builders.GameBlockFactory
+import org.hexworks.cavesofzircon.extensions.blocksVision
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.cobalt.datatypes.extensions.fold
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.builder.game.GameAreaBuilder
+import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.game.GameArea
 import org.hexworks.zircon.api.screen.Screen
+import org.hexworks.zircon.api.shape.EllipseFactory
+import org.hexworks.zircon.api.shape.LineFactory
 import org.hexworks.zircon.api.uievent.UIEvent
 
 class World(
@@ -83,7 +88,7 @@ class World(
         entity: GameEntity<EntityType>,
         offset: Position3D = Positions.default3DPosition(),
         size: Size3D = actualSize()
-    ) : Boolean =
+    ): Boolean =
         findEmptyLocationWithin(offset, size).fold(
             whenEmpty = { false },
             whenPresent = {
@@ -91,6 +96,10 @@ class World(
                 true
             }
         )
+
+    fun addWorldEntity(entity: GameEntity<EntityType>) {
+        engine.addEntity(entity)
+    }
 
     fun findEmptyLocationWithin(offset: Position3D, size: Size3D): Maybe<Position3D> {
         var position = Maybe.empty<Position3D>()
@@ -127,4 +136,36 @@ class World(
 
         return success
     }
+
+    fun isVisionBlockedAt(position: Position3D) =
+        fetchBlockAt(position).fold(
+            whenEmpty = { false },
+            whenPresent = {
+                it.entities.any(GameEntity<EntityType>::blocksVision)
+            }
+        )
+
+    fun findVisiblePositionsFor(entity: GameEntity<EntityType>): Iterable<Position> =
+        entity.position.to2DPosition().let { centerPosition ->
+
+            entity.findAttribute(Vision::class).map { (radius) ->
+                EllipseFactory.buildEllipse(
+                    fromPosition = centerPosition,
+                    toPosition = centerPosition.withRelativeX(radius).withRelativeY(radius)
+                ).positions()
+                    .flatMap { ringPos ->
+                        mutableListOf<Position>().apply {
+                            val iter = LineFactory.buildLine(centerPosition, ringPos).iterator()
+                            do {
+                                val next = iter.next()
+                                add(next)
+                            } while (
+                                iter.hasNext() &&
+                                isVisionBlockedAt(Position3D.from2DPosition(next, entity.position.z)).not()
+                            )
+                        }
+                    }
+            }.orElse(listOf())
+        }
+
 }

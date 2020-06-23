@@ -3,7 +3,9 @@ package org.hexworks.cavesofzircon.views
 import org.hexworks.cavesofzircon.world.Game
 import org.hexworks.cavesofzircon.blocks.GameBlock
 import org.hexworks.cavesofzircon.GameConfig
+import org.hexworks.cavesofzircon.systems.GameLogEvent
 import org.hexworks.cavesofzircon.world.GameBuilder
+import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.zircon.api.ColorThemes
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.GameComponents
@@ -14,6 +16,7 @@ import org.hexworks.zircon.api.game.ProjectionMode
 import org.hexworks.zircon.api.mvc.base.BaseView
 import org.hexworks.zircon.api.uievent.KeyboardEventType
 import org.hexworks.zircon.api.uievent.Processed
+import org.hexworks.zircon.internal.Zircon
 
 class PlayView(private val game: Game = GameBuilder.defaultGame()) : BaseView() {
 
@@ -49,6 +52,14 @@ class PlayView(private val game: Game = GameBuilder.defaultGame()) : BaseView() 
                 game.world.update(this, event, game)
                 Processed
             }
+        }
+
+        Zircon.eventBus.subscribe<GameLogEvent> {(text) ->
+            logArea.addParagraph(
+                paragraph = text,
+                withNewLine = false,
+                withTypingEffectSpeedInMs = 10
+            )
         }
     }
 }

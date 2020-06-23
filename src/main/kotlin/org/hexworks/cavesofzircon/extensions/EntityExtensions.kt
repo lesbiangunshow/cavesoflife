@@ -8,6 +8,10 @@ import org.hexworks.cavesofzircon.attributes.EntityActions
 import org.hexworks.cavesofzircon.attributes.EntityPosition
 import org.hexworks.cavesofzircon.attributes.EntityTile
 import org.hexworks.cavesofzircon.attributes.flags.BlockOccupier
+import org.hexworks.cavesofzircon.attributes.flags.VisionBlocker
+import org.hexworks.cavesofzircon.attributes.types.Combatant
+import org.hexworks.cavesofzircon.attributes.types.combatStats
+import org.hexworks.cavesofzircon.attributes.types.Player
 import org.hexworks.cavesofzircon.world.GameContext
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.cobalt.datatypes.extensions.orElseThrow
@@ -23,15 +27,18 @@ var AnyGameEntity.position
     }
 
 val AnyGameEntity.tile: Tile
-get() = tryToFindAttribute(EntityTile::class).tile
+    get() = tryToFindAttribute(EntityTile::class).tile
 
 val AnyGameEntity.occupesBlock: Boolean
     get() = findAttribute(BlockOccupier::class).isPresent
 
+val AnyGameEntity.blocksVision: Boolean
+    get() = findAttribute(VisionBlocker::class).isPresent
+
 fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Response {
     var result: Response = Pass
     findAttribute(EntityActions::class).map {
-        it.createActionsfFor(context, this, target).forEach {action ->
+        it.createActionsfFor(context, this, target).forEach { action ->
             if (target.executeCommand(action) is Consumed) {
                 result = Consumed
                 return@forEach
@@ -42,7 +49,15 @@ fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Res
     return result
 }
 
-fun <T: Attribute> AnyGameEntity.tryToFindAttribute(klass: KClass<T>): T = findAttribute(klass).orElseThrow {
+fun <T : Attribute> AnyGameEntity.tryToFindAttribute(klass: KClass<T>): T = findAttribute(klass).orElseThrow {
     NoSuchElementException("Entity '$this' has no property with type '${klass.simpleName}'.")
 }
+
+val AnyGameEntity.isPlayer: Boolean
+    get() = type == Player
+
+fun GameEntity<Combatant>.ifHasNoHealthLeftThen(function: () -> Unit) {
+    if (combatStats.hp <= 0) function()
+}
+
 

@@ -9,6 +9,11 @@ object GameTileRepository {
 
     val EMPTY: CharacterTile = Tiles.empty()
 
+    val UNREVEALED: CharacterTile = Tiles.newBuilder()
+        .withCharacter(' ')
+        .withBackgroundColor(GameColors.UNREVEALED_COLOR)
+        .buildCharacterTile()
+
     val FLOOR: CharacterTile = Tiles.newBuilder()
         .withCharacter((Symbols.INTERPUNCT))
         .withForegroundColor(GameColors.FLOOR_FOREGROUND)
@@ -33,4 +38,15 @@ object GameTileRepository {
         .withForegroundColor(GameColors.FUNGUS_COLOR)
         .buildCharacterTile()
 
+    val STAIRS_UP: CharacterTile = Tiles.newBuilder()
+        .withCharacter('<')
+        .withForegroundColor(GameColors.ACCENT_COLOR)
+        .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
+        .buildCharacterTile()
+
+    val STAIRS_DOWN: CharacterTile = Tiles.newBuilder()
+        .withCharacter('>')
+        .withForegroundColor(GameColors.ACCENT_COLOR)
+        .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
+        .buildCharacterTile()
 }
