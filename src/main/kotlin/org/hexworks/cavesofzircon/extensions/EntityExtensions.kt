@@ -4,6 +4,8 @@ import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
 import org.hexworks.amethyst.api.Response
+import org.hexworks.amethyst.api.entity.Entity
+import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cavesofzircon.attributes.EntityActions
 import org.hexworks.cavesofzircon.attributes.EntityPosition
 import org.hexworks.cavesofzircon.attributes.EntityTile
@@ -17,6 +19,7 @@ import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.cobalt.datatypes.extensions.orElseThrow
 import org.hexworks.zircon.api.data.Tile
 import kotlin.reflect.KClass
+import kotlin.reflect.full.isSuperclassOf
 
 var AnyGameEntity.position
     get() = tryToFindAttribute(EntityPosition::class).position
@@ -59,5 +62,11 @@ val AnyGameEntity.isPlayer: Boolean
 fun GameEntity<Combatant>.ifHasNoHealthLeftThen(function: () -> Unit) {
     if (combatStats.hp <= 0) function()
 }
+
+@Suppress("UNCHECKED_CAST")
+inline fun <reified T : EntityType> Iterable<AnyGameEntity>.filterType(): List<Entity<T, GameContext>> =
+    filter {
+        T::class.isSuperclassOf(it.type::class)
+    }.toList() as List<Entity<T, GameContext>>
 
 

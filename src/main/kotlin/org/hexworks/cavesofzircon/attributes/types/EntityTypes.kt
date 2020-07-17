@@ -18,8 +18,17 @@ object StairsUp : BaseEntityType(
 
 object Player : BaseEntityType(
     name = "player"
-), Combatant
+), Combatant, ItemHolder
+
+object Zircon : BaseEntityType(
+    name = "zircon",
+    description = "A small piece of Zircon. Its value is unfathomable."
+), Item
 
 object Fungus : BaseEntityType(
     name = "fungus"
+), Combatant
+
+object Bat : BaseEntityType(
+    name = "bat"
 ), Combatant

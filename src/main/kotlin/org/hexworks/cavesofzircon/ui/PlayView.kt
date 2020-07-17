@@ -1,4 +1,4 @@
-package org.hexworks.cavesofzircon.views
+package org.hexworks.cavesofzircon.ui
 
 import org.hexworks.cavesofzircon.world.Game
 import org.hexworks.cavesofzircon.blocks.GameBlock

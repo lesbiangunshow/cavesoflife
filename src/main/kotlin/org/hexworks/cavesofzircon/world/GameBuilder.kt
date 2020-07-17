@@ -36,6 +36,8 @@ class GameBuilder(val worldSize: Size3D) {
         val player = addPlayer()
 
         addFungi()
+        addBats()
+        addZircons()
 
         return Game.create(
             player = player,
@@ -69,6 +71,22 @@ class GameBuilder(val worldSize: Size3D) {
         repeat(world.actualSize().zLength) {level ->
             repeat(FUNGI_PER_LEVEL) {
                 EntityFactory.newFungus().addToWorld(level)
+            }
+        }
+    }
+
+    private fun addBats() = also {
+        repeat(world.actualSize().zLength) {level ->
+            repeat(GameConfig.BATS_PER_LEVEL) {
+                EntityFactory.newBat().addToWorld(level)
+            }
+        }
+    }
+
+    private fun addZircons() = also {
+        repeat(world.actualSize().zLength) { level ->
+            repeat(GameConfig.ZIRCONS_PER_LEVEL) {
+                EntityFactory.newZircon().addToWorld(level)
             }
         }
     }

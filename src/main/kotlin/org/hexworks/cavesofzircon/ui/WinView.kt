@@ -1,4 +1,4 @@
-package org.hexworks.cavesofzircon.views
+package org.hexworks.cavesofzircon.ui
 
 import org.hexworks.zircon.api.ColorThemes
 import org.hexworks.zircon.api.Components
